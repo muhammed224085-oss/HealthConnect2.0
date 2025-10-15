@@ -1,7 +1,7 @@
 package com.healthconnect.controller;
 
 import com.healthconnect.model.Medicine;
-import com.healthconnect.service.DataStorageService;
+import com.healthconnect.repository.MedicineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,46 +17,56 @@ import java.util.Optional;
 public class MedicineController {
     
     @Autowired
-    private DataStorageService dataStorage;
+    private MedicineRepository medicineRepository;
     
     @PostMapping
     public ResponseEntity<?> createMedicine(@RequestBody Medicine medicine) {
-        Medicine saved = dataStorage.saveMedicine(medicine);
+        Medicine saved = medicineRepository.save(medicine);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
     
     @GetMapping
     public ResponseEntity<List<Medicine>> getAllMedicines() {
-        return ResponseEntity.ok(dataStorage.getAllMedicines());
+        return ResponseEntity.ok(medicineRepository.findAll());
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<?> getMedicineById(@PathVariable Long id) {
-        return dataStorage.getMedicineById(id)
+    public ResponseEntity<?> getMedicineById(@PathVariable String id) {
+        return medicineRepository.findById(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
     
+    @GetMapping("/search")
+    public ResponseEntity<List<Medicine>> searchMedicines(@RequestParam String query) {
+        return ResponseEntity.ok(medicineRepository.findByNameContainingIgnoreCase(query));
+    }
+    
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<Medicine>> getMedicinesByCategory(@PathVariable String category) {
+        return ResponseEntity.ok(medicineRepository.findByCategory(category));
+    }
+    
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateMedicine(@PathVariable Long id, @RequestBody Medicine medicine) {
-        Optional<Medicine> existing = dataStorage.getMedicineById(id);
+    public ResponseEntity<?> updateMedicine(@PathVariable String id, @RequestBody Medicine medicine) {
+        Optional<Medicine> existing = medicineRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         
         medicine.setId(id);
-        Medicine updated = dataStorage.saveMedicine(medicine);
+        Medicine updated = medicineRepository.save(medicine);
         return ResponseEntity.ok(updated);
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteMedicine(@PathVariable Long id) {
-        Optional<Medicine> existing = dataStorage.getMedicineById(id);
+    public ResponseEntity<?> deleteMedicine(@PathVariable String id) {
+        Optional<Medicine> existing = medicineRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         
-        dataStorage.deleteMedicine(id);
+        medicineRepository.deleteById(id);
         return ResponseEntity.ok(Map.of("message", "Medicine deleted successfully"));
     }
 }

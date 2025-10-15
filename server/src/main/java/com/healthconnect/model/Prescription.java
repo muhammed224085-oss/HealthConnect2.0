@@ -1,5 +1,8 @@
 package com.healthconnect.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,11 +10,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Document(collection = "prescriptions")
 public class Prescription {
-    private Long id;
-    private Long appointmentId;
-    private Long doctorId;
-    private Long patientId;
+    @Id
+    private String id;
+    private String appointmentId;
+    private String doctorId;
+    private String patientId;
     private String doctorName;
     private String patientName;
     private String diagnosis;

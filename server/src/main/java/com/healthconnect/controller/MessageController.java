@@ -30,8 +30,8 @@ public class MessageController {
     
     @GetMapping("/conversation")
     public ResponseEntity<List<Message>> getConversation(
-            @RequestParam Long userId1, 
-            @RequestParam Long userId2) {
+            @RequestParam String userId1, 
+            @RequestParam String userId2) {
         List<Message> messages = dataStorage.getMessagesBetween(userId1, userId2);
         return ResponseEntity.ok(messages);
     }

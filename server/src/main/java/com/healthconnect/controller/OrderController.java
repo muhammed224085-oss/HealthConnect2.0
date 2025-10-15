@@ -31,19 +31,19 @@ public class OrderController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOrderById(@PathVariable Long id) {
+    public ResponseEntity<?> getOrderById(@PathVariable String id) {
         return dataStorage.getOrderById(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
     
     @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<MedicineOrder>> getOrdersByPatient(@PathVariable Long patientId) {
+    public ResponseEntity<List<MedicineOrder>> getOrdersByPatient(@PathVariable String patientId) {
         return ResponseEntity.ok(dataStorage.getOrdersByPatientId(patientId));
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateOrder(@PathVariable Long id, @RequestBody MedicineOrder order) {
+    public ResponseEntity<?> updateOrder(@PathVariable String id, @RequestBody MedicineOrder order) {
         Optional<MedicineOrder> existing = dataStorage.getOrderById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -55,7 +55,7 @@ public class OrderController {
     }
     
     @PatchMapping("/{id}/status")
-    public ResponseEntity<?> updateOrderStatus(@PathVariable Long id, @RequestBody Map<String, String> status) {
+    public ResponseEntity<?> updateOrderStatus(@PathVariable String id, @RequestBody Map<String, String> status) {
         Optional<MedicineOrder> existing = dataStorage.getOrderById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -68,7 +68,7 @@ public class OrderController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteOrder(@PathVariable Long id) {
+    public ResponseEntity<?> deleteOrder(@PathVariable String id) {
         Optional<MedicineOrder> existing = dataStorage.getOrderById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();

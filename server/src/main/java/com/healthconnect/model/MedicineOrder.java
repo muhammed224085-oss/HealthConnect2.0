@@ -1,16 +1,22 @@
 package com.healthconnect.model;
 
+import java.util.List;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Document(collection = "orders")
 public class MedicineOrder {
-    private Long id;
-    private Long patientId;
+    @Id
+    private String id;
+    private String patientId;
     private String patientName;
     private String patientAddress;
     private String patientPhone;

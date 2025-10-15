@@ -15,40 +15,40 @@ import java.util.Optional;
 @RequestMapping("/api/prescriptions")
 @CrossOrigin(origins = "http://localhost:3000")
 public class PrescriptionController {
-    
+
     @Autowired
     private DataStorageService dataStorage;
-    
+
     @PostMapping
     public ResponseEntity<?> createPrescription(@RequestBody Prescription prescription) {
         Prescription saved = dataStorage.savePrescription(prescription);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
-    
+
     @GetMapping
     public ResponseEntity<List<Prescription>> getAllPrescriptions() {
         return ResponseEntity.ok(dataStorage.getAllPrescriptions());
     }
-    
+
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPrescriptionById(@PathVariable Long id) {
+    public ResponseEntity<?> getPrescriptionById(@PathVariable String id) {
         return dataStorage.getPrescriptionById(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
-    
+
     @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<Prescription>> getPrescriptionsByPatient(@PathVariable Long patientId) {
+    public ResponseEntity<List<Prescription>> getPrescriptionsByPatient(@PathVariable String patientId) {
         return ResponseEntity.ok(dataStorage.getPrescriptionsByPatientId(patientId));
     }
-    
+
     @GetMapping("/doctor/{doctorId}")
-    public ResponseEntity<List<Prescription>> getPrescriptionsByDoctor(@PathVariable Long doctorId) {
+    public ResponseEntity<List<Prescription>> getPrescriptionsByDoctor(@PathVariable String doctorId) {
         return ResponseEntity.ok(dataStorage.getPrescriptionsByDoctorId(doctorId));
     }
-    
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePrescription(@PathVariable Long id, @RequestBody Prescription prescription) {
+    public ResponseEntity<?> updatePrescription(@PathVariable String id, @RequestBody Prescription prescription) {
         Optional<Prescription> existing = dataStorage.getPrescriptionById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -58,9 +58,9 @@ public class PrescriptionController {
         Prescription updated = dataStorage.savePrescription(prescription);
         return ResponseEntity.ok(updated);
     }
-    
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePrescription(@PathVariable Long id) {
+    public ResponseEntity<?> deletePrescription(@PathVariable String id) {
         Optional<Prescription> existing = dataStorage.getPrescriptionById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();

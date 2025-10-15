@@ -63,7 +63,13 @@ function PatientDashboard() {
   const handleAppointmentSubmit = async (e) => {
     e.preventDefault();
     
-    const selectedDoctor = doctors.find(d => d.id === parseInt(appointmentForm.doctorId));
+    // Find doctor by ID (comparing as strings since IDs are now strings)
+    const selectedDoctor = doctors.find(d => d.id === appointmentForm.doctorId || d.id === parseInt(appointmentForm.doctorId));
+    
+    if (!selectedDoctor) {
+      alert('Please select a valid doctor');
+      return;
+    }
     
     const appointmentData = {
       patientId: user.id,

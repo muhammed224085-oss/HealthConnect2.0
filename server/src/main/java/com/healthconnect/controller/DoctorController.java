@@ -1,7 +1,7 @@
 package com.healthconnect.controller;
 
 import com.healthconnect.model.Doctor;
-import com.healthconnect.service.DataStorageService;
+import com.healthconnect.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +18,17 @@ import java.util.Optional;
 public class DoctorController {
     
     @Autowired
-    private DataStorageService dataStorage;
+    private DoctorRepository doctorRepository;
     
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Doctor doctor) {
         // Check if email already exists
-        Optional<Doctor> existing = dataStorage.getDoctorByEmail(doctor.getEmail());
-        if (existing.isPresent()) {
+        if (doctorRepository.existsByEmail(doctor.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("error", "Email already registered"));
         }
         
-        Doctor savedDoctor = dataStorage.saveDoctor(doctor);
+        Doctor savedDoctor = doctorRepository.save(doctor);
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Doctor registered successfully");
         response.put("doctor", savedDoctor);
@@ -41,7 +40,7 @@ public class DoctorController {
         String email = credentials.get("email");
         String password = credentials.get("password");
         
-        Optional<Doctor> doctor = dataStorage.getDoctorByEmail(email);
+        Optional<Doctor> doctor = doctorRepository.findByEmail(email);
         if (doctor.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("error", "Invalid email or password"));
@@ -60,36 +59,36 @@ public class DoctorController {
     
     @GetMapping
     public ResponseEntity<List<Doctor>> getAllDoctors() {
-        return ResponseEntity.ok(dataStorage.getAllDoctors());
+        return ResponseEntity.ok(doctorRepository.findAll());
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<?> getDoctorById(@PathVariable Long id) {
-        return dataStorage.getDoctorById(id)
+    public ResponseEntity<?> getDoctorById(@PathVariable String id) {
+        return doctorRepository.findById(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateDoctor(@PathVariable Long id, @RequestBody Doctor doctor) {
-        Optional<Doctor> existing = dataStorage.getDoctorById(id);
+    public ResponseEntity<?> updateDoctor(@PathVariable String id, @RequestBody Doctor doctor) {
+        Optional<Doctor> existing = doctorRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         
         doctor.setId(id);
-        Doctor updated = dataStorage.saveDoctor(doctor);
+        Doctor updated = doctorRepository.save(doctor);
         return ResponseEntity.ok(updated);
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteDoctor(@PathVariable Long id) {
-        Optional<Doctor> existing = dataStorage.getDoctorById(id);
+    public ResponseEntity<?> deleteDoctor(@PathVariable String id) {
+        Optional<Doctor> existing = doctorRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         
-        dataStorage.deleteDoctor(id);
+        doctorRepository.deleteById(id);
         return ResponseEntity.ok(Map.of("message", "Doctor deleted successfully"));
     }
 }
