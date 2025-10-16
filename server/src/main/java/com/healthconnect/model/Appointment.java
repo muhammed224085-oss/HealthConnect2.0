@@ -21,4 +21,9 @@ public class Appointment {
     private String time;
     private String status; // PENDING, CONFIRMED, COMPLETED, CANCELLED
     private String symptoms;
+    private String consultationType; // IN_PERSON, VIDEO_CALL, AUDIO_CALL
+    private Double consultationFee;
+    private String paymentStatus; // UNPAID, PAID
+    private String paymentMethod; // CASH, CARD, UPI, NET_BANKING
+    private String paymentTime; // BEFORE, AFTER
 }

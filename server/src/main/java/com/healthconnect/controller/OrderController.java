@@ -1,7 +1,7 @@
 package com.healthconnect.controller;
 
 import com.healthconnect.model.MedicineOrder;
-import com.healthconnect.service.DataStorageService;
+import com.healthconnect.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,64 +17,64 @@ import java.util.Optional;
 public class OrderController {
     
     @Autowired
-    private DataStorageService dataStorage;
+    private OrderRepository orderRepository;
     
     @PostMapping
     public ResponseEntity<?> createOrder(@RequestBody MedicineOrder order) {
-        MedicineOrder saved = dataStorage.saveOrder(order);
+        MedicineOrder saved = orderRepository.save(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
     
     @GetMapping
     public ResponseEntity<List<MedicineOrder>> getAllOrders() {
-        return ResponseEntity.ok(dataStorage.getAllOrders());
+        return ResponseEntity.ok(orderRepository.findAll());
     }
     
     @GetMapping("/{id}")
     public ResponseEntity<?> getOrderById(@PathVariable String id) {
-        return dataStorage.getOrderById(id)
+        return orderRepository.findById(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
     
     @GetMapping("/patient/{patientId}")
     public ResponseEntity<List<MedicineOrder>> getOrdersByPatient(@PathVariable String patientId) {
-        return ResponseEntity.ok(dataStorage.getOrdersByPatientId(patientId));
+        return ResponseEntity.ok(orderRepository.findByPatientId(patientId));
     }
     
     @PutMapping("/{id}")
     public ResponseEntity<?> updateOrder(@PathVariable String id, @RequestBody MedicineOrder order) {
-        Optional<MedicineOrder> existing = dataStorage.getOrderById(id);
+        Optional<MedicineOrder> existing = orderRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         
         order.setId(id);
-        MedicineOrder updated = dataStorage.saveOrder(order);
+        MedicineOrder updated = orderRepository.save(order);
         return ResponseEntity.ok(updated);
     }
     
     @PatchMapping("/{id}/status")
     public ResponseEntity<?> updateOrderStatus(@PathVariable String id, @RequestBody Map<String, String> status) {
-        Optional<MedicineOrder> existing = dataStorage.getOrderById(id);
+        Optional<MedicineOrder> existing = orderRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         
         MedicineOrder order = existing.get();
         order.setStatus(status.get("status"));
-        MedicineOrder updated = dataStorage.saveOrder(order);
+        MedicineOrder updated = orderRepository.save(order);
         return ResponseEntity.ok(updated);
     }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOrder(@PathVariable String id) {
-        Optional<MedicineOrder> existing = dataStorage.getOrderById(id);
+        Optional<MedicineOrder> existing = orderRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         
-        dataStorage.deleteOrder(id);
+        orderRepository.deleteById(id);
         return ResponseEntity.ok(Map.of("message", "Order deleted successfully"));
     }
 }

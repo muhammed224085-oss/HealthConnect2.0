@@ -1,7 +1,7 @@
 package com.healthconnect.controller;
 
 import com.healthconnect.model.Prescription;
-import com.healthconnect.service.DataStorageService;
+import com.healthconnect.repository.PrescriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,56 +17,56 @@ import java.util.Optional;
 public class PrescriptionController {
 
     @Autowired
-    private DataStorageService dataStorage;
+    private PrescriptionRepository prescriptionRepository;
 
     @PostMapping
     public ResponseEntity<?> createPrescription(@RequestBody Prescription prescription) {
-        Prescription saved = dataStorage.savePrescription(prescription);
+        Prescription saved = prescriptionRepository.save(prescription);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @GetMapping
     public ResponseEntity<List<Prescription>> getAllPrescriptions() {
-        return ResponseEntity.ok(dataStorage.getAllPrescriptions());
+        return ResponseEntity.ok(prescriptionRepository.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getPrescriptionById(@PathVariable String id) {
-        return dataStorage.getPrescriptionById(id)
+        return prescriptionRepository.findById(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/patient/{patientId}")
     public ResponseEntity<List<Prescription>> getPrescriptionsByPatient(@PathVariable String patientId) {
-        return ResponseEntity.ok(dataStorage.getPrescriptionsByPatientId(patientId));
+        return ResponseEntity.ok(prescriptionRepository.findByPatientId(patientId));
     }
 
     @GetMapping("/doctor/{doctorId}")
     public ResponseEntity<List<Prescription>> getPrescriptionsByDoctor(@PathVariable String doctorId) {
-        return ResponseEntity.ok(dataStorage.getPrescriptionsByDoctorId(doctorId));
+        return ResponseEntity.ok(prescriptionRepository.findByDoctorId(doctorId));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updatePrescription(@PathVariable String id, @RequestBody Prescription prescription) {
-        Optional<Prescription> existing = dataStorage.getPrescriptionById(id);
+        Optional<Prescription> existing = prescriptionRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         
         prescription.setId(id);
-        Prescription updated = dataStorage.savePrescription(prescription);
+        Prescription updated = prescriptionRepository.save(prescription);
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePrescription(@PathVariable String id) {
-        Optional<Prescription> existing = dataStorage.getPrescriptionById(id);
+        Optional<Prescription> existing = prescriptionRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         
-        dataStorage.deletePrescription(id);
+        prescriptionRepository.deleteById(id);
         return ResponseEntity.ok(Map.of("message", "Prescription deleted successfully"));
     }
 }

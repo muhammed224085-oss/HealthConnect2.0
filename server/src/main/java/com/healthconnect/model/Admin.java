@@ -10,17 +10,15 @@ import org.springframework.data.mongodb.core.index.Indexed;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "doctors")
-public class Doctor {
+@Document(collection = "admins")
+public class Admin {
     @Id
     private String id;
     private String name;
     @Indexed(unique = true)
     private String email;
     private String password;
-    private String specialization;
     private String phone;
-    private String experience;
-    private String qualification;
-    private Double consultationFee; // Consultation fee in INR
+    private String role; // SUPER_ADMIN, ADMIN
+    private Boolean isActive;
 }

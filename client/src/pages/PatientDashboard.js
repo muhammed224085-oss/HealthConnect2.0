@@ -14,7 +14,10 @@ function PatientDashboard() {
     doctorId: '',
     date: '',
     time: '',
-    symptoms: ''
+    symptoms: '',
+    consultationType: 'IN_PERSON',
+    paymentTime: 'BEFORE',
+    paymentMethod: ''
   });
 
   useEffect(() => {
@@ -70,6 +73,12 @@ function PatientDashboard() {
       alert('Please select a valid doctor');
       return;
     }
+
+    // Check if payment method is selected when payment time is BEFORE
+    if (appointmentForm.paymentTime === 'BEFORE' && !appointmentForm.paymentMethod) {
+      alert('Please select a payment method');
+      return;
+    }
     
     const appointmentData = {
       patientId: user.id,
@@ -79,14 +88,27 @@ function PatientDashboard() {
       date: appointmentForm.date,
       time: appointmentForm.time,
       symptoms: appointmentForm.symptoms,
-      status: 'PENDING'
+      status: 'PENDING',
+      consultationType: appointmentForm.consultationType,
+      consultationFee: selectedDoctor.consultationFee || 0,
+      paymentStatus: appointmentForm.paymentTime === 'BEFORE' ? 'PAID' : 'UNPAID',
+      paymentMethod: appointmentForm.paymentTime === 'BEFORE' ? appointmentForm.paymentMethod : null,
+      paymentTime: appointmentForm.paymentTime
     };
 
     try {
       await appointmentAPI.create(appointmentData);
-      alert('Appointment booked successfully!');
+      alert('Appointment booked successfully!' + (appointmentForm.paymentTime === 'BEFORE' ? ' Payment confirmed.' : ''));
       setShowAppointmentForm(false);
-      setAppointmentForm({ doctorId: '', date: '', time: '', symptoms: '' });
+      setAppointmentForm({ 
+        doctorId: '', 
+        date: '', 
+        time: '', 
+        symptoms: '', 
+        consultationType: 'IN_PERSON',
+        paymentTime: 'BEFORE',
+        paymentMethod: ''
+      });
       loadData(user.id);
     } catch (error) {
       console.error('Error booking appointment:', error);
@@ -153,6 +175,7 @@ function PatientDashboard() {
                       <p><strong>Specialization:</strong> {doctor.specialization}</p>
                       <p><strong>Experience:</strong> {doctor.experience}</p>
                       <p><strong>Qualification:</strong> {doctor.qualification}</p>
+                      <p><strong>Consultation Fee:</strong> ₹{doctor.consultationFee || 'Not specified'}</p>
                       <button 
                         className="btn btn-success"
                         onClick={() => {
@@ -181,7 +204,9 @@ function PatientDashboard() {
                       <th>Doctor</th>
                       <th>Date</th>
                       <th>Time</th>
-                      <th>Symptoms</th>
+                      <th>Type</th>
+                      <th>Fee</th>
+                      <th>Payment</th>
                       <th>Status</th>
                     </tr>
                   </thead>
@@ -191,7 +216,17 @@ function PatientDashboard() {
                         <td>{appointment.doctorName}</td>
                         <td>{appointment.date}</td>
                         <td>{appointment.time}</td>
-                        <td>{appointment.symptoms}</td>
+                        <td>
+                          {appointment.consultationType === 'VIDEO_CALL' && '📹 Video'}
+                          {appointment.consultationType === 'AUDIO_CALL' && '📞 Audio'}
+                          {appointment.consultationType === 'IN_PERSON' && '👤 In-Person'}
+                        </td>
+                        <td>₹{appointment.consultationFee || 0}</td>
+                        <td>
+                          <span className={`badge ${appointment.paymentStatus === 'PAID' ? 'badge-confirmed' : 'badge-pending'}`}>
+                            {appointment.paymentStatus || 'UNPAID'}
+                          </span>
+                        </td>
                         <td>
                           <span className={`badge badge-${appointment.status.toLowerCase()}`}>
                             {appointment.status}
@@ -240,7 +275,7 @@ function PatientDashboard() {
             justifyContent: 'center',
             zIndex: 1000
           }}>
-            <div className="card" style={{ maxWidth: '600px', width: '90%' }}>
+            <div className="card" style={{ maxWidth: '600px', width: '90%', maxHeight: '90vh', overflowY: 'auto' }}>
               <h3>Book Appointment</h3>
               <form onSubmit={handleAppointmentSubmit}>
                 <div className="form-group">
@@ -253,11 +288,25 @@ function PatientDashboard() {
                     <option value="">Select a doctor</option>
                     {doctors.map(doctor => (
                       <option key={doctor.id} value={doctor.id}>
-                        {doctor.name} - {doctor.specialization}
+                        {doctor.name} - {doctor.specialization} (₹{doctor.consultationFee || 0})
                       </option>
                     ))}
                   </select>
                 </div>
+
+                <div className="form-group">
+                  <label>Consultation Type *</label>
+                  <select
+                    value={appointmentForm.consultationType}
+                    onChange={(e) => setAppointmentForm({...appointmentForm, consultationType: e.target.value})}
+                    required
+                  >
+                    <option value="IN_PERSON">👤 In-Person Visit</option>
+                    <option value="VIDEO_CALL">📹 Video Call</option>
+                    <option value="AUDIO_CALL">📞 Audio Call</option>
+                  </select>
+                </div>
+
                 <div className="form-group">
                   <label>Date *</label>
                   <input
@@ -287,8 +336,44 @@ function PatientDashboard() {
                     placeholder="Describe your symptoms"
                   />
                 </div>
+
+                <div className="form-group">
+                  <label>Payment Time *</label>
+                  <select
+                    value={appointmentForm.paymentTime}
+                    onChange={(e) => setAppointmentForm({...appointmentForm, paymentTime: e.target.value})}
+                    required
+                  >
+                    <option value="BEFORE">💳 Pay Before Consultation</option>
+                    <option value="AFTER">💰 Pay After Consultation</option>
+                  </select>
+                </div>
+
+                {appointmentForm.paymentTime === 'BEFORE' && (
+                  <div className="form-group">
+                    <label>Payment Method *</label>
+                    <select
+                      value={appointmentForm.paymentMethod}
+                      onChange={(e) => setAppointmentForm({...appointmentForm, paymentMethod: e.target.value})}
+                      required={appointmentForm.paymentTime === 'BEFORE'}
+                    >
+                      <option value="">Select payment method</option>
+                      <option value="UPI">UPI (Google Pay, PhonePe, Paytm)</option>
+                      <option value="CARD">Credit/Debit Card</option>
+                      <option value="NET_BANKING">Net Banking</option>
+                    </select>
+                    {appointmentForm.doctorId && (
+                      <div style={{ marginTop: '10px', padding: '10px', background: '#f0f8ff', borderRadius: '5px' }}>
+                        <strong>Amount to Pay: ₹{doctors.find(d => d.id === appointmentForm.doctorId)?.consultationFee || 0}</strong>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <div style={{ display: 'flex', gap: '10px' }}>
-                  <button type="submit" className="btn btn-success">Book Appointment</button>
+                  <button type="submit" className="btn btn-success">
+                    {appointmentForm.paymentTime === 'BEFORE' ? 'Pay & Book Appointment' : 'Book Appointment'}
+                  </button>
                   <button 
                     type="button" 
                     className="btn btn-danger" 

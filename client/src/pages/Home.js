@@ -6,6 +6,20 @@ function Home() {
     <div>
       <div className="navbar">
         <h2>🏥 HealthConnect</h2>
+        <Link to="/admin/login" style={{ textDecoration: 'none' }}>
+          <button style={{
+            backgroundColor: '#667eea',
+            color: 'white',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            fontSize: '14px'
+          }}>
+            🛡️ Admin Portal
+          </button>
+        </Link>
       </div>
       
       <div className="container" style={{ marginTop: '50px', textAlign: 'center' }}>

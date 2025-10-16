@@ -94,7 +94,7 @@ function Orders() {
                     </p>
                   </div>
                   <div style={{ textAlign: 'right' }}>
-                    <h3>${order.totalAmount.toFixed(2)}</h3>
+                    <h3>₹{order.totalAmount.toFixed(2)}</h3>
                     <button 
                       className="btn btn-primary"
                       onClick={() => setSelectedOrder(selectedOrder?.id === order.id ? null : order)}
@@ -121,8 +121,8 @@ function Orders() {
                           <tr key={index}>
                             <td>{item.medicineName}</td>
                             <td>{item.quantity}</td>
-                            <td>${item.price}</td>
-                            <td>${(item.price * item.quantity).toFixed(2)}</td>
+                            <td>₹{item.price}</td>
+                            <td>₹{(item.price * item.quantity).toFixed(2)}</td>
                           </tr>
                         ))}
                       </tbody>

@@ -140,9 +140,11 @@ function DoctorDashboard() {
                   <thead>
                     <tr>
                       <th>Patient</th>
-                      <th>Date</th>
-                      <th>Time</th>
+                      <th>Date & Time</th>
+                      <th>Type</th>
                       <th>Symptoms</th>
+                      <th>Fee</th>
+                      <th>Payment</th>
                       <th>Status</th>
                       <th>Actions</th>
                     </tr>
@@ -151,9 +153,19 @@ function DoctorDashboard() {
                     {appointments.map(appointment => (
                       <tr key={appointment.id}>
                         <td>{appointment.patientName}</td>
-                        <td>{appointment.date}</td>
-                        <td>{appointment.time}</td>
+                        <td>{appointment.date} {appointment.time}</td>
+                        <td>
+                          {appointment.consultationType === 'VIDEO_CALL' && '📹 Video'}
+                          {appointment.consultationType === 'AUDIO_CALL' && '📞 Audio'}
+                          {appointment.consultationType === 'IN_PERSON' && '👤 In-Person'}
+                        </td>
                         <td>{appointment.symptoms}</td>
+                        <td>₹{appointment.consultationFee || 0}</td>
+                        <td>
+                          <span className={`badge ${appointment.paymentStatus === 'PAID' ? 'badge-confirmed' : 'badge-pending'}`}>
+                            {appointment.paymentStatus || 'UNPAID'}
+                          </span>
+                        </td>
                         <td>
                           <span className={`badge badge-${appointment.status.toLowerCase()}`}>
                             {appointment.status}

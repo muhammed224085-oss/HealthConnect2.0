@@ -9,6 +9,8 @@ import DoctorDashboard from './pages/DoctorDashboard';
 import PatientLogin from './pages/PatientLogin';
 import PatientRegister from './pages/PatientRegister';
 import PatientDashboard from './pages/PatientDashboard';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
 import Chat from './pages/Chat';
 import MedicineShop from './pages/MedicineShop';
 import Orders from './pages/Orders';
@@ -29,6 +31,10 @@ function App() {
           <Route path="/patient/login" element={<PatientLogin />} />
           <Route path="/patient/register" element={<PatientRegister />} />
           <Route path="/patient/dashboard" element={<PatientDashboard />} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
           
           {/* Common Routes */}
           <Route path="/chat" element={<Chat />} />

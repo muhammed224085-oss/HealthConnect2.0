@@ -136,7 +136,7 @@ function MedicineShop() {
               <h3>{medicine.name}</h3>
               <p style={{ color: '#666', fontSize: '14px' }}>{medicine.description}</p>
               <p><strong>Category:</strong> {medicine.category}</p>
-              <p><strong>Price:</strong> ${medicine.price}</p>
+              <p><strong>Price:</strong> ₹{medicine.price}</p>
               <p><strong>In Stock:</strong> {medicine.stock} units</p>
               <button 
                 className="btn btn-success" 
@@ -183,7 +183,7 @@ function MedicineShop() {
                       {cart.map(item => (
                         <tr key={item.medicineId}>
                           <td>{item.medicineName}</td>
-                          <td>${item.price}</td>
+                          <td>₹{item.price}</td>
                           <td>
                             <input
                               type="number"
@@ -193,7 +193,7 @@ function MedicineShop() {
                               style={{ width: '60px', padding: '5px' }}
                             />
                           </td>
-                          <td>${(item.price * item.quantity).toFixed(2)}</td>
+                          <td>₹{(item.price * item.quantity).toFixed(2)}</td>
                           <td>
                             <button 
                               className="btn btn-danger"
@@ -208,7 +208,7 @@ function MedicineShop() {
                   </table>
                   
                   <div style={{ marginTop: '20px', textAlign: 'right' }}>
-                    <h3>Total: ${calculateTotal()}</h3>
+                    <h3>Total: ₹{calculateTotal()}</h3>
                   </div>
                   
                   <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
