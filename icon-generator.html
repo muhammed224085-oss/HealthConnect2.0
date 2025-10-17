@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthConnect Icon Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .icon-preview {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        .icon {
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        .icon-192 {
+            width: 192px;
+            height: 192px;
+            font-size: 80px;
+        }
+        .icon-512 {
+            width: 128px;
+            height: 128px;
+            font-size: 50px;
+        }
+        button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #1565c0;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        input[type="color"] {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: #1976d2; text-align: center;">🏥 HealthConnect Icon Generator</h1>
+        
+        <div class="controls">
+            <label for="bgColor">Background Color:</label>
+            <input type="color" id="bgColor" value="#1976d2">
+            
+            <label for="iconText">Icon Text:</label>
+            <select id="iconText">
+                <option value="🏥">🏥 Hospital</option>
+                <option value="⚕️">⚕️ Medical</option>
+                <option value="💊">💊 Medicine</option>
+                <option value="🩺">🩺 Stethoscope</option>
+                <option value="HC">HC Text</option>
+                <option value="H+">H+ Plus</option>
+            </select>
+            
+            <button onclick="updateIcon()">Update Icon</button>
+        </div>
+        
+        <div class="icon-preview">
+            <div>
+                <div class="icon icon-192" id="icon192" style="background: #1976d2;">🏥</div>
+                <p style="text-align: center;">192x192px</p>
+                <button onclick="downloadIcon(192)">Download</button>
+            </div>
+            <div>
+                <div class="icon icon-512" id="icon512" style="background: #1976d2;">🏥</div>
+                <p style="text-align: center;">512x512px (Preview)</p>
+                <button onclick="downloadIcon(512)">Download</button>
+            </div>
+        </div>
+        
+        <div style="background: #f0f8ff; padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <h3>📋 Instructions:</h3>
+            <ol>
+                <li>Choose your preferred background color</li>
+                <li>Select an icon symbol</li>
+                <li>Click "Update Icon" to preview</li>
+                <li>Download both sizes (192px and 512px)</li>
+                <li>Save as <strong>logo192.png</strong> and <strong>logo512.png</strong></li>
+                <li>Place them in your <code>client/public/</code> folder</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function updateIcon() {
+            const bgColor = document.getElementById('bgColor').value;
+            const iconText = document.getElementById('iconText').value;
+            
+            document.getElementById('icon192').style.background = bgColor;
+            document.getElementById('icon192').textContent = iconText;
+            
+            document.getElementById('icon512').style.background = bgColor;
+            document.getElementById('icon512').textContent = iconText;
+        }
+
+        function downloadIcon(size) {
+            const bgColor = document.getElementById('bgColor').value;
+            const iconText = document.getElementById('iconText').value;
+            
+            // Create canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Fill background
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Add icon text
+            ctx.fillStyle = 'white';
+            ctx.font = `${size * 0.4}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(iconText, size / 2, size / 2);
+            
+            // Download
+            const link = document.createElement('a');
+            link.download = `logo${size}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
+</body>
+</html>

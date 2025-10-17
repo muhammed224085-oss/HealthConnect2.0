@@ -39,11 +39,11 @@ try {
 }
 
 # Test login with second admin
-Write-Host "`nTesting login with mevinbenty507@gmail.com..." -ForegroundColor Cyan
+Write-Host "`nTesting login with hadhi@gmail.com..." -ForegroundColor Cyan
 try {
     $body = @{
-        email = "mevinbenty507@gmail.com"
-        password = "mevinbenty12+"
+        email = "hadhi@gmail.com"
+        password = "hadhi123"
     } | ConvertTo-Json
 
     $response = Invoke-RestMethod -Uri "http://localhost:8080/api/admin/login" `

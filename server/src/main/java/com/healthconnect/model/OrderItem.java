@@ -8,8 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderItem {
-    private Long medicineId;
+    private String medicineId;
     private String medicineName;
+    private String name; // Alternative field for medicine name
     private Integer quantity;
     private Double price;
 }

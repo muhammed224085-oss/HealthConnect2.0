@@ -45,7 +45,7 @@ function PatientLogin() {
       
       <div className="container" style={{ maxWidth: '500px', marginTop: '50px' }}>
         <div className="card">
-          <h2 style={{ textAlign: 'center', color: '#28a745', marginBottom: '30px' }}>
+          <h2 style={{ textAlign: 'center', color: '#1b9136ff', marginBottom: '30px' }}>
             Patient Login
           </h2>
           

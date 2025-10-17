@@ -40,7 +40,7 @@ function AdminLogin() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             style={styles.input}
-                            placeholder="admin@healthconnect.com"
+                            placeholder="Enter your email"
                             required
                         />
                     </div>
@@ -62,14 +62,6 @@ function AdminLogin() {
                     </button>
                 </form>
                 
-                <div style={styles.info}>
-                    <p><strong>Admin Credentials:</strong></p>
-                    <p style={{marginTop: '10px'}}>Email: admin@healthconnect.com</p>
-                    <p>Password: admin123</p>
-                    <hr style={{margin: '15px 0', border: '0', borderTop: '1px solid #ddd'}} />
-                    <p>Email: mevinbenty507@gmail.com</p>
-                    <p>Password: mevinbenty12+</p>
-                </div>
                 
                 <button 
                     onClick={() => navigate('/')} 

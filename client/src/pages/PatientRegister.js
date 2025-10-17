@@ -64,7 +64,7 @@ function PatientRegister() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                placeholder="John Doe"
+                placeholder="Enter your full name"
               />
             </div>
             
@@ -76,7 +76,7 @@ function PatientRegister() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                placeholder="john.doe@email.com"
+                placeholder="Enter your email "
               />
             </div>
             
@@ -88,7 +88,7 @@ function PatientRegister() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                placeholder="Enter password"
+                placeholder="Set a secure password"
               />
             </div>
             
@@ -100,7 +100,7 @@ function PatientRegister() {
                 value={formData.phone}
                 onChange={handleChange}
                 required
-                placeholder="+1-555-0123"
+                placeholder="Enter your phone number"
               />
             </div>
             
@@ -112,7 +112,7 @@ function PatientRegister() {
                 value={formData.age}
                 onChange={handleChange}
                 required
-                placeholder="25"
+                placeholder="Enter your age"
               />
             </div>
             
@@ -124,7 +124,7 @@ function PatientRegister() {
                 onChange={handleChange}
                 required
                 rows="2"
-                placeholder="123 Main St, City"
+                placeholder="Enter your address"
               />
             </div>
             
@@ -135,7 +135,7 @@ function PatientRegister() {
                 value={formData.medicalHistory}
                 onChange={handleChange}
                 rows="3"
-                placeholder="Any allergies, previous conditions, etc."
+                placeholder="Enter any relevant medical history like allergies, chronic conditions, etc."
               />
             </div>
             

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quick Icon Generator</title>
+</head>
+<body>
+    <h2>HealthConnect Quick Icons</h2>
+    <p>Click the buttons below to download app icons:</p>
+    
+    <button onclick="generateIcon(192)">Download logo192.png</button>
+    <button onclick="generateIcon(512)">Download logo512.png</button>
+    
+    <script>
+        function generateIcon(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            ctx.fillStyle = '#1976d2';
+            ctx.fillRect(0, 0, size, size);
+            
+            // White cross (medical symbol)
+            ctx.fillStyle = 'white';
+            const crossSize = size * 0.6;
+            const crossThickness = size * 0.1;
+            const centerX = size / 2;
+            const centerY = size / 2;
+            
+            // Horizontal bar
+            ctx.fillRect(centerX - crossSize/2, centerY - crossThickness/2, crossSize, crossThickness);
+            // Vertical bar
+            ctx.fillRect(centerX - crossThickness/2, centerY - crossSize/2, crossThickness, crossSize);
+            
+            // Add "HC" text
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.2}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('HC', centerX, size * 0.9);
+            
+            // Download
+            const link = document.createElement('a');
+            link.download = `logo${size}.png`;
+            link.href = canvas.toDataURL();
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>

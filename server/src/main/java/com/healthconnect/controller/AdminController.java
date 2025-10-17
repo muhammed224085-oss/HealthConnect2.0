@@ -229,7 +229,7 @@ public class AdminController {
         return ResponseEntity.ok("Message deleted successfully");
     }
 
-    // Admin Management (Super Admin only features)
+    // Admin Management ( Admin only features)
     @GetMapping("/admins")
     public ResponseEntity<List<Admin>> getAllAdmins() {
         return ResponseEntity.ok(adminRepository.findAll());

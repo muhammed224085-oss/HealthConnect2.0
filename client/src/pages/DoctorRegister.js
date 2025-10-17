@@ -64,7 +64,7 @@ function DoctorRegister() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                placeholder="Dr. John Doe"
+                placeholder="Enter your full name"
               />
             </div>
             
@@ -76,7 +76,7 @@ function DoctorRegister() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                placeholder="john.doe@email.com"
+              placeholder="Enter your email"
               />
             </div>
             
@@ -88,7 +88,7 @@ function DoctorRegister() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                placeholder="Enter password"
+                placeholder="Enter your password"
               />
             </div>
             
@@ -100,7 +100,7 @@ function DoctorRegister() {
                 value={formData.specialization}
                 onChange={handleChange}
                 required
-                placeholder="e.g., Cardiology, Pediatrics"
+                placeholder="Enter your specialization (e.g., Cardiology)"
               />
             </div>
             
@@ -112,7 +112,7 @@ function DoctorRegister() {
                 value={formData.phone}
                 onChange={handleChange}
                 required
-                placeholder="+1-555-0123"
+                placeholder="Enter your phone number"
               />
             </div>
             
@@ -124,7 +124,7 @@ function DoctorRegister() {
                 value={formData.experience}
                 onChange={handleChange}
                 required
-                placeholder="e.g., 5 years"
+                placeholder="Enter your years of experience"
               />
             </div>
             
@@ -136,7 +136,7 @@ function DoctorRegister() {
                 value={formData.qualification}
                 onChange={handleChange}
                 required
-                placeholder="e.g., MBBS, MD"
+                placeholder="Enter your qualifications"
               />
             </div>
             
