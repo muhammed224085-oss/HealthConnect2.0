@@ -14,6 +14,9 @@ import AdminDashboard from './pages/AdminDashboard';
 import Chat from './pages/Chat';
 import MedicineShop from './pages/MedicineShop';
 import Orders from './pages/Orders';
+import AIHealthAssistant from './pages/AIHealthAssistant';
+import PaymentPage from './pages/PaymentPage';
+import FloatingChatbot from './components/FloatingChatbot';
 
 function App() {
   return (
@@ -40,10 +43,17 @@ function App() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/medicines" element={<MedicineShop />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/payment" element={<PaymentPage />} />
+          
+          {/* AI Chatbot Route */}
+          <Route path="/ai-assistant" element={<AIHealthAssistant />} />
           
           {/* Redirect unknown routes */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        
+        {/* Floating Chatbot - Available on all pages */}
+        <FloatingChatbot />
       </div>
     </Router>
   );

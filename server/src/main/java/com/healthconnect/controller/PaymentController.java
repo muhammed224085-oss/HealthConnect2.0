@@ -63,6 +63,55 @@ public class PaymentController {
         }
     }
 
+    // Confirm UPI/GPay payment (manual confirmation after QR scan)
+    @PostMapping("/confirm")
+    public ResponseEntity<Map<String, Object>> confirmPayment(@RequestBody Map<String, Object> paymentData) {
+        try {
+            String orderId = (String) paymentData.get("orderId");
+            String patientId = (String) paymentData.get("patientId");
+            String patientName = (String) paymentData.get("patientName");
+            Double amount = Double.valueOf(paymentData.get("amount").toString());
+            String paymentMethod = (String) paymentData.get("paymentMethod");
+            String paymentStatus = (String) paymentData.get("paymentStatus");
+            List<Map<String, Object>> items = (List<Map<String, Object>>) paymentData.get("items");
+
+            // Create payment record
+            Payment payment = new Payment(patientId, "GPAY_UPI", amount, "Payment via " + paymentMethod);
+            payment.setPaymentMethod(paymentMethod);
+            payment.setStatus(paymentStatus);
+            payment.setRazorpayOrderId(orderId); // Store order ID for reference
+
+            // Add items if provided
+            if (items != null && !items.isEmpty()) {
+                List<Payment.PaymentItem> paymentItems = items.stream()
+                    .map(item -> new Payment.PaymentItem(
+                        (String) item.get("name"),
+                        item.get("description") != null ? (String) item.get("description") : "",
+                        Double.valueOf(item.get("price").toString()),
+                        Integer.valueOf(item.get("quantity").toString())
+                    ))
+                    .toList();
+                payment.setItems(paymentItems);
+            }
+
+            // Save payment
+            Payment savedPayment = paymentService.savePayment(payment);
+
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "Payment confirmed successfully",
+                "payment", savedPayment,
+                "orderId", orderId,
+                "timestamp", savedPayment.getCreatedAt()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                "success", false,
+                "error", e.getMessage()
+            ));
+        }
+    }
+
     // Get patient payments
     @GetMapping("/patient/{patientId}")
     public ResponseEntity<List<Payment>> getPatientPayments(@PathVariable String patientId) {

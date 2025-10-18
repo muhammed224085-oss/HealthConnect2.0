@@ -137,6 +137,38 @@ public class PaymentService {
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
     }
 
+    // Save payment (for manual confirmation like GPay QR)
+    public Payment savePayment(Payment payment) {
+        try {
+            // Set default values if not provided
+            if (payment.getInvoiceNumber() == null || payment.getInvoiceNumber().isEmpty()) {
+                payment.setInvoiceNumber(generateInvoiceNumber());
+            }
+            if (payment.getCurrency() == null || payment.getCurrency().isEmpty()) {
+                payment.setCurrency("INR");
+            }
+            if (payment.getStatus() == null || payment.getStatus().isEmpty()) {
+                payment.setStatus("COMPLETED");
+            }
+            
+            Payment savedPayment = paymentRepository.save(payment);
+            
+            // Distribute payment to doctor/pharmacy wallet after successful payment
+            if ("COMPLETED".equals(payment.getStatus()) || "SUCCESS".equals(payment.getStatus())) {
+                try {
+                    walletService.distributePayment(savedPayment);
+                } catch (Exception e) {
+                    // Log error but don't fail the payment save
+                    System.err.println("Error distributing payment: " + e.getMessage());
+                }
+            }
+            
+            return savedPayment;
+        } catch (Exception e) {
+            throw new RuntimeException("Error saving payment: " + e.getMessage());
+        }
+    }
+
     // Generate invoice
     public Map<String, Object> generateInvoice(String paymentId) {
         Payment payment = getPaymentById(paymentId);
